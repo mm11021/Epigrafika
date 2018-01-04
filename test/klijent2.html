@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <script src="./klijent_files/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("button").click(function(){
+                var objekat= {oznaka : 'Oznaka', jezikUpisa : 'grcki', natpis : 'Tekst natpisa', vrstaNatpisa : 'Natpis2', provincija : 'Macedonia', grad:'Beograd',
+                        mestoNalaska : 'Beograd',
+                        modernoImeDrzave : 'Srbija', modernoMesto : 'Beograd', tip : ' ', materijal : ' ', sirina : '20', visina : '20', duzina : '31', komentar : 'komentar',
+                        fazaUnosa : 'nekompletno', pleme : 'Apace', vreme : 'datovano', trenutnaLokacijaZnamenitosti: 'ustanova1',
+                lokalizovanPodatak: 'true'};
+
+                // OBRATITI PAZNJU NA TRENUTNU LOKACIJU ZNAMENITOSTI ...
+
+                var json_objekat = JSON.stringify(objekat);
+
+                /*
+                 $.ajax({
+                 url: "demo_test_post.asp",
+                 //data: data,
+
+                 //dataType: dataType,
+                 success: success
+                 });*/
+                $.post( "server.php", json_objekat, function( data, status ) {
+                    alert( "Data Loaded: " + data + " Status: " + status );
+                });
+
+            });
+        });
+
+    </script>
+</head>
+<body>
+<input type="text" id="oznaka">
+<input type="text" id="natpis">
+<br>
+<button>Send an HTTP GET request to a page and get the result back</button>
+
+
+
+</body></html>

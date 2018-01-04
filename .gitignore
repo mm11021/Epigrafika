@@ -1,0 +1,6 @@
+.DS_Store
+nbproject
+*.pdf
+*.png
+*.jpg
+.idea

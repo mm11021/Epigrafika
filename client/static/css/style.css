@@ -1,0 +1,154 @@
+.text-transparent
+{
+	color:transparent;
+}
+.textred
+{
+	color:red !important;
+}
+.caret-up {
+    width: 0; 
+    height: 0; 
+    border-left: 4px solid rgba(0, 0, 0, 0);
+    border-right: 4px solid rgba(0, 0, 0, 0);
+    border-bottom: 4px solid;
+    display: inline-block;
+    margin-left: 2px;
+    vertical-align: middle;
+}
+.search_hide
+{
+	right:15px;
+	top:10px;
+}
+.menu-black
+{
+	color:#2c3e50 !important;
+}
+.fieldset_border
+{
+	
+	padding:15px;
+        border: 2px solid #c0c0c0; 
+        border-radius: 20px;
+}
+
+.border_transparent{
+	border:solid 2px transparent;
+	background-color:transparent !important;
+	cursor:default !important;
+}
+.textarea_unos
+{
+	max-width:100%;
+	min-height:70px;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    z-index: 1000;
+    list-style-type: none;
+    background-color: white;
+    width: 150px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border: 1px solid black;
+    border-top: none;
+    padding: 0px;
+}
+.kursor
+{
+	cursor: default;
+}
+.autocomplete-dropdown li {
+    padding: 2px 10px 2px 10px;
+    box-sizing: border-box;
+    width: 100%;
+    color: black;
+}
+
+.autocomplete-dropdown li:hover {
+    background-color: #F7F7F7;
+}
+
+.autocomplete-dropdown a:hover {
+    text-decoration: none;
+}
+
+#map-container
+{
+    padding: 10px;
+    width: 100%;
+    height: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: azure;
+}
+
+#map-canvas
+{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 600px;
+    background-color: gray;
+}
+#map-slider{
+    width: 100%;
+}
+#map-slider .slider-selection {
+	background: #BABABA;
+}
+
+.ispis
+{
+    text-decoration: underline;
+    font-size: 17px;
+}
+
+input[id="user"]:disabled ,input[id="oznaka"]:disabled  {
+    cursor:default;
+}
+
+.caret-right 
+{
+    border-bottom: 5px solid transparent;
+    border-top: 5px solid transparent;
+    border-left: 5px solid;
+    display: inline-block;
+    height: 0;
+    vertical-align: middle;
+    width: 0;
+}
+.photo-delete
+{
+	width:150px;
+	height:150px;
+	margin:3px !important;
+	float:left;
+}
+.bibl-delete span
+{
+	color:red;
+	cursor:pointer;
+}
+
+.photo-delete span
+{
+	text-align:right;
+	font-size:15pt;
+	color:red;
+	top:0px;
+	right:0px;
+	cursor:pointer;
+}
+
+.photo-delete img
+{
+	float:left;
+	margin:10px;
+	padding:0;
+	width:100px;
+	height:100px;
+	bottom:0px;
+}
