@@ -1,28 +1,20 @@
-var firstRow = ["q","w","e","r","t","y","u","i","o","p"];
-var secondRow = ["a","s","d","f","g","h","j","k","l"];
-var thirdRow = ["z","x","c","v","b","n","m"];
-var shiftKeys = {"`":"~", "1":"!", "2":"@", "3":"#", "4":"$", "5":"%", "6":"^", "7":"&", "8":"*", "9":"(", "0":")", "-":"_", "=":"+",
-                 "[":"{", "]":"}", ";":":", "'":'"', "\\":"|", ",":"<", ".":">", "/":"?"}
+var keyboardJSON;
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200)
+        keyboardJSON = JSON.parse(this.responseText);
+};
+xmlhttp.open("GET", "kb_langs.json", false);
+xmlhttp.send();
+
 var shift = false;
 var caps = false;
-function setInnerHTML(id)
-{
-	if(shift)
-    {
-	  if(shiftKeys[id]!=undefined)
-	    return shiftKeys[id];
-      else if(!caps && id.length==1)
-		return id.toUpperCase();
-    }
-    else if(caps && id.length==1)
-		return id.toUpperCase();
-	return id;
-}
+
 function createButton(id)
 {
   var button = document.createElement("button");
   button.id = id;
-  button.innerHTML = setInnerHTML(id);
+  button.innerHTML = id;
   button.onclick = function()
   {
 	var text;
@@ -37,58 +29,69 @@ function createButton(id)
 	  case "LShift":
 	  case "RShift":
 	    shift = !shift;
-		var buttons=document.getElementsByTagName("button");
-		for(i=0;i<buttons.length;i++)
-		  buttons[i].innerHTML=setInnerHTML(buttons[i].id);
+		var tastatura = document.getElementById("keyboard");
+		var parent = tastatura.parentNode;
+		parent.removeChild(tastatura);
+		tastatura = document.createElement("div");
+        tastatura.id = "keyboard";
+		parent.appendChild(tastatura);
+		createKeyboard(language);
 		text = "";
 		break;
 	  case "Caps":
 	    caps = !caps;
-		var buttons=document.getElementsByTagName("button");
-		for(i=0;i<buttons.length;i++)
-		  buttons[i].innerHTML=setInnerHTML(buttons[i].id);
+		var tastatura = document.getElementById("keyboard");
+		var parent = tastatura.parentNode;
+		parent.removeChild(tastatura);
+		tastatura = document.createElement("div");
+        tastatura.id = "keyboard";
+		parent.appendChild(tastatura);
+		createKeyboard(language);
 		text = "";
 		break;
 	  default:
-	    text = this.innerHTML;
+	    // neophodno je da se ne bi ispisivalo &amp; i slicno
+	    var parser = new DOMParser;
+		var dom = parser.parseFromString("<!DOCTYPE html><body>"+this.innerHTML,"text/html");
+		text = dom.body.textContent;
     }
 	var textBox = document.getElementById("textbox");
 	textBox.value += text;
   }
-  document.body.appendChild(button);
+  document.getElementById("keyboard").appendChild(button);
 }
-function createKeyboard()
+function createKeyboard(lang)
 {
-  createButton("`");
-  for(i=1;i<=9;i++)
-    createButton(i);
-  createButton("0");
-  createButton("-");
-  createButton("=");
-  document.body.appendChild(document.createElement("br"));
-  createButton("Tab");
-  for(key in firstRow)
-    createButton(firstRow[key]);
-  createButton("[");
-  createButton("]");
-  document.body.appendChild(document.createElement("br"));
-  createButton("Caps");
-  for(key in secondRow)
-    createButton(secondRow[key]);
-  createButton(";");
-  createButton("'");
-  createButton("\\");
-  document.body.appendChild(document.createElement("br"));
-  createButton("LShift");
-  for(key in thirdRow)
-    createButton(thirdRow[key]);
-  createButton(",");
-  createButton(".");
-  createButton("/");
-  createButton("RShift");
+  var kb = keyboardJSON[lang];
+  for(row in kb)
+  {
+	  var kbrow = kb[row];
+	  for(keys in kbrow)
+	  {
+		  var key = kbrow[keys];
+		  if(typeof key == "string")
+			  createButton(key);
+		  else
+			  for(id in key)
+				  if(id!="letters")
+					  if(shift)
+						  createButton(key[id]);
+					  else createButton(id);
+				  else
+					  for(letter in key[id])
+						  if(shift == caps)
+							  createButton(key[id][letter]);
+						  else createButton(key[id][letter].toUpperCase());
+	  }
+	  document.getElementById("keyboard").appendChild(document.createElement("br"));
+  }
 }
-createKeyboard();
-document.body.appendChild(document.createElement("br"));
+var language = "french";
+var tastatura = document.createElement("div");
+tastatura.id = "keyboard";
+document.body.appendChild(tastatura);
+createKeyboard(language);
+document.getElementById("keyboard").appendChild(document.createElement("br"));
 var textBox = document.createElement("input");
 textBox.id = "textbox";
 textBox.type = "text";
