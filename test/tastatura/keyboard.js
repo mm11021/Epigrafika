@@ -5,14 +5,14 @@ xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200)
         keyboardJSON = JSON.parse(this.responseText);
 };
-xmlhttp.open("GET", "kb_langs.json", false);
+xmlhttp.open("GET", "/test/tastatura/kb_langs.json", false);
 xmlhttp.send();
 
 xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200)
         transformisani = JSON.parse(this.responseText);
 };
-xmlhttp.open("GET", "kb_special.json", false);
+xmlhttp.open("GET", "/test/tastatura/kb_special.json", false);
 xmlhttp.send();
 
 var shift = false;
@@ -21,7 +21,7 @@ var kapica = false;
 var umlaut = false;
 var akcenat = false;
 
-function regenerateKeyboard(lang)
+function regenerateKeyboard(lang,textbox)
 {
   var tastatura = document.getElementById("keyboard");
   var parent = tastatura.parentNode;
@@ -29,10 +29,10 @@ function regenerateKeyboard(lang)
   tastatura = document.createElement("div");
   tastatura.id = "keyboard";
   parent.appendChild(tastatura);
-  createKeyboard(language);
+  createKeyboard(lang,textbox);
 }
 
-function createButton(id)
+function createButton(id,textbox)
 {
   var button = document.createElement("button");
   button.id = id;
@@ -61,11 +61,11 @@ function createButton(id)
       case "LShift":
       case "RShift":
         shift = !shift;
-        regenerateKeyboard(language);
+        regenerateKeyboard(language,textbox);
         break;
       case "Caps":
         caps = !caps;
-        regenerateKeyboard(language);
+        regenerateKeyboard(language,textbox);
         break;
       case "^":
       case "¨":
@@ -79,7 +79,7 @@ function createButton(id)
             umlaut = true;
             shift = false;
           }
-          regenerateKeyboard(language);
+          regenerateKeyboard(language,textbox);
           break;
         }
         if(language == "greek")
@@ -90,7 +90,7 @@ function createButton(id)
             shift = false;
           }
           else akcenat = true;
-          regenerateKeyboard(language);
+          regenerateKeyboard(language,textbox);
           break;
         }
       default:
@@ -108,16 +108,15 @@ function createButton(id)
             text = "¨"+slovo;
           else text = "΄"+slovo;
           kapica = umlaut = akcenat = false;
-          regenerateKeyboard(language);
+          regenerateKeyboard(language,textbox);
         }
         else text = slovo;
     }
-    var textBox = document.getElementById("textbox");
-    textBox.value += text;
+    textbox.value += text;
   }
   document.getElementById("keyboard").appendChild(button);
 }
-function createKeyboard(lang)
+function createKeyboard(lang,textbox)
 {
   var kb = keyboardJSON[lang];
   for(row in kb)
@@ -127,13 +126,13 @@ function createKeyboard(lang)
     {
       var key = kbrow[keys];
       if(typeof key == "string")
-        createButton(key);
+        createButton(key,textbox);
       else
         for(id in key)
           if(id!="letters")
             if(shift)
-              createButton(key[id]);
-            else createButton(id);
+              createButton(key[id],textbox);
+            else createButton(id,textbox);
           else
             for(letter in key[id])
             {
@@ -145,20 +144,9 @@ function createKeyboard(lang)
                   slovo = transformisani[slovo][0];
                 else if(umlaut)
                   slovo = transformisani[slovo][1];
-              createButton(slovo);
+              createButton(slovo,textbox);
             }
     }
     document.getElementById("keyboard").appendChild(document.createElement("br"));
   }
 }
-
-var language = "greek";
-var tastatura = document.createElement("div");
-tastatura.id = "keyboard";
-document.body.appendChild(tastatura);
-createKeyboard(language);
-document.getElementById("keyboard").appendChild(document.createElement("br"));
-var textBox = document.createElement("input");
-textBox.id = "textbox";
-textBox.type = "text";
-document.body.appendChild(textBox);
