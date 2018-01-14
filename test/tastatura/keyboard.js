@@ -1,4 +1,5 @@
 var keyboardJSON;
+var transformisani;
 var xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200)
@@ -7,15 +8,18 @@ xmlhttp.onreadystatechange = function() {
 xmlhttp.open("GET", "kb_langs.json", false);
 xmlhttp.send();
 
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200)
+        transformisani = JSON.parse(this.responseText);
+};
+xmlhttp.open("GET", "kb_special.json", false);
+xmlhttp.send();
+
 var shift = false;
 var caps = false;
 var kapica = false;
 var umlaut = false;
 var akcenat = false;
-
-var transformisani = {"a":["â","ä"], "A":["Â","Ä"], "e":["ê","ë"], "E":["Ê","Ë"], "i":["î","ï"], "I":["Î","Ï"], "o":["ô","ö"], "O":["Ô","Ö"], "u":["û","ü"], "U":["Û","Ü"],
-                      "α":["ά","α"], "Α":["Ά","Α"], "ε":["έ","ε"], "Ε":["Έ","Ε"], "η":["ή","η"], "Η":["Ή","Η"], "ι":["ί","ϊ"], "Ι":["Ί","Ϊ"], "ο":["ό","ο"], "Ο":["Ό","Ο"],
-                      "υ":["ύ","ϋ"], "Υ":["Ύ","Ϋ"], "ω":["ώ","ω"], "Ω":["Ώ","Ω"]};
 
 function regenerateKeyboard(lang)
 {
