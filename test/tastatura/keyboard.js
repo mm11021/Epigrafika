@@ -69,7 +69,7 @@ function createButton(id)
         break;
       case "^":
       case "¨":
-	  case "΄":
+      case "΄":
         if(language == "french")
         {
           if(id == "^")
@@ -82,7 +82,7 @@ function createButton(id)
           regenerateKeyboard(language);
           break;
         }
-		if(language == "greek")
+        if(language == "greek")
         {
           if(id == "¨")
           {
@@ -98,10 +98,10 @@ function createButton(id)
         var parser = new DOMParser;
         var dom = parser.parseFromString("<!DOCTYPE html><body>"+this.innerHTML,"text/html");
         var slovo = dom.body.textContent;
-		if(kapica || umlaut || akcenat)
+        if(kapica || umlaut || akcenat)
         {
           if("âÂêÊîÎôÔûÛäÄëËïÏöÖüÜάΆέΈήΉίΊόΌύΎώΏϊΪϋΫ".includes(slovo))
-			text = slovo;
+            text = slovo;
           else if(kapica)
             text = "^"+slovo;
           else if (umlaut)
@@ -110,7 +110,7 @@ function createButton(id)
           kapica = umlaut = akcenat = false;
           regenerateKeyboard(language);
         }
-		else text = slovo;
+        else text = slovo;
     }
     var textBox = document.getElementById("textbox");
     textBox.value += text;
