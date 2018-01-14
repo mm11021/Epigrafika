@@ -10,6 +10,20 @@ xmlhttp.send();
 var shift = false;
 var caps = false;
 var kapica = false;
+var umlaut = false;
+
+var transformisani = {"a":["â","ä"], "A":["Â","Ä"], "e":["ê","ë"], "E":["Ê","Ë"], "i":["î","ï"], "I":["Î","Ï"], "o":["ô","ö"], "O":["Ô","Ö"], "u":["û","ü"], "U":["Û","Ü"]};
+
+function regenerateKeyboard(lang)
+{
+  var tastatura = document.getElementById("keyboard");
+  var parent = tastatura.parentNode;
+  parent.removeChild(tastatura);
+  tastatura = document.createElement("div");
+  tastatura.id = "keyboard";
+  parent.appendChild(tastatura);
+  createKeyboard(language);
+}
 
 function createButton(id)
 {
@@ -40,52 +54,40 @@ function createButton(id)
       case "LShift":
       case "RShift":
         shift = !shift;
-        var tastatura = document.getElementById("keyboard");
-        var parent = tastatura.parentNode;
-        parent.removeChild(tastatura);
-        tastatura = document.createElement("div");
-        tastatura.id = "keyboard";
-        parent.appendChild(tastatura);
-        createKeyboard(language);
+        regenerateKeyboard(language);
         break;
       case "Caps":
         caps = !caps;
-        var tastatura = document.getElementById("keyboard");
-        var parent = tastatura.parentNode;
-        parent.removeChild(tastatura);
-        tastatura = document.createElement("div");
-        tastatura.id = "keyboard";
-        parent.appendChild(tastatura);
-        createKeyboard(language);
+        regenerateKeyboard(language);
         break;
       case "^":
-        kapica = true;
-        var tastatura = document.getElementById("keyboard");
-        var parent = tastatura.parentNode;
-        parent.removeChild(tastatura);
-        tastatura = document.createElement("div");
-        tastatura.id = "keyboard";
-        parent.appendChild(tastatura);
-        createKeyboard(language);
-        break;
+      case "¨":
+        if(language == "french")
+        {
+          if(id == "^")
+            kapica = true;
+          else
+          {
+            umlaut = true;
+            shift = false;
+          }
+          regenerateKeyboard(language);
+          break;
+        }
       default:
         // neophodno je da se ne bi ispisivalo &amp; i slicno
         var parser = new DOMParser;
         var dom = parser.parseFromString("<!DOCTYPE html><body>"+this.innerHTML,"text/html");
         var slovo = dom.body.textContent;
-		if(kapica)
+		if(kapica || umlaut)
         {
-          if("âÂêÊîÎôÔûÛ".includes(slovo))
+          if("âÂêÊîÎôÔûÛäÄëËïÏöÖüÜ".includes(slovo))
 			text = slovo;
-		  else text = "^"+slovo;
-          kapica = false;
-          var tastatura = document.getElementById("keyboard");
-          var parent = tastatura.parentNode;
-          parent.removeChild(tastatura);
-          tastatura = document.createElement("div");
-          tastatura.id = "keyboard";
-          parent.appendChild(tastatura);
-          createKeyboard(language);
+          else if(kapica)
+            text = "^"+slovo;
+          else text = "¨"+slovo;
+          kapica = umlaut = false;
+          regenerateKeyboard(language);
         }
 		else text = slovo;
     }
@@ -117,39 +119,11 @@ function createKeyboard(lang)
               var slovo=key[id][letter];
               if(shift != caps)
                 slovo = slovo.toUpperCase();
-              if(kapica)
-                switch(slovo)
-                {
-                  case "a":
-                    slovo = "â";
-                    break;
-                  case "A":
-                    slovo = "Â";
-                    break; 
-                  case "e":
-                    slovo = "ê";
-                    break;
-                  case "E":
-                    slovo = "Ê";
-                  case "i":
-                    slovo = "î";
-                    break;
-                  case "I":
-                    slovo = "Î";
-                    break;
-                  case "o":
-                    slovo = "ô";
-                    break;
-                  case "O":
-                    slovo = "Ô";
-                    break;
-                  case "u":
-                    slovo = "û";
-                    break;
-                  case "U":
-                    slovo = "Û";
-                    break;
-                }
+              if(transformisani[slovo]!=undefined)
+                if(kapica)
+                  slovo = transformisani[slovo][0];
+                else if(umlaut)
+                  slovo = transformisani[slovo][1];
               createButton(slovo);
             }
     }
