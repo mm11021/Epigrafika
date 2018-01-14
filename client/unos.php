@@ -18,6 +18,34 @@ else {
 <!-- ucitavanje kontrolera -->
 <script src="static/scripts/unos.js"></script>
 <script src="static/scripts/libs/spin.min.js"></script>
+<script type="text/javascript" src="/test/tastatura/keyboard.js"></script>
+<script type="text/javascript">
+    var language = "english";
+	var napravljena = false;
+	
+	function bla(textbox)
+	{
+		if(!napravljena)
+		{
+			var node = document.getElementById("tastatura").parentNode;
+			var tastatura = document.createElement("div");
+			tastatura.id = "keyboard";
+			node.appendChild(tastatura);
+			createKeyboard(language,textbox);
+			napravljena = true;
+		}
+		else
+		{
+			var tastatura = document.getElementById("keyboard");
+			var parent = tastatura.parentNode;
+			parent.removeChild(tastatura);
+			/*tastatura = parent;
+			parent = tastatura.parentNode;
+			parent.removeChild(tastatura);*/
+			napravljena = false;
+		}
+	}
+</script>
 <div class="container" ng-controller='unosController' ng-cloak>
 	<form action=""  name='formUnos' method="post" enctype='multipart/form-data' class="form-horizontal">
 	<div class="fieldset_border">
@@ -38,6 +66,7 @@ else {
 						<input type="radio" name="jezikUpisa" ng-model="jezikUpisa" value="grcki"/>  {{tr.grcki}}
 					</label>
 				</div>
+				
 			</div>
 			<div class="row">
 				<div class="col-sm-offset-2 col-sm-12">
@@ -49,6 +78,11 @@ else {
                                         {{tr.greska_jedinstvena_oznaka}}
 					</span>
 				</div>
+			</div>
+			<div class="col-sm3">
+				<button id="tastatura" onclick="bla(oznaka)">
+						Tastatura
+				</button>
 			</div>
 			<div class="row form-group">
 				<label for="natpis" class="col-sm-2 control-label">{{tr.natpis}}  <span style="color:red">*</span>:</label>
