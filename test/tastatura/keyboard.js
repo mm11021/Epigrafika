@@ -11,8 +11,11 @@ var shift = false;
 var caps = false;
 var kapica = false;
 var umlaut = false;
+var akcenat = false;
 
-var transformisani = {"a":["â","ä"], "A":["Â","Ä"], "e":["ê","ë"], "E":["Ê","Ë"], "i":["î","ï"], "I":["Î","Ï"], "o":["ô","ö"], "O":["Ô","Ö"], "u":["û","ü"], "U":["Û","Ü"]};
+var transformisani = {"a":["â","ä"], "A":["Â","Ä"], "e":["ê","ë"], "E":["Ê","Ë"], "i":["î","ï"], "I":["Î","Ï"], "o":["ô","ö"], "O":["Ô","Ö"], "u":["û","ü"], "U":["Û","Ü"],
+                      "α":["ά","α"], "Α":["Ά","Α"], "ε":["έ","ε"], "Ε":["Έ","Ε"], "η":["ή","η"], "Η":["Ή","Η"], "ι":["ί","ϊ"], "Ι":["Ί","Ϊ"], "ο":["ό","ο"], "Ο":["Ό","Ο"],
+                      "υ":["ύ","ϋ"], "Υ":["Ύ","Ϋ"], "ω":["ώ","ω"], "Ω":["Ώ","Ω"]};
 
 function regenerateKeyboard(lang)
 {
@@ -62,6 +65,7 @@ function createButton(id)
         break;
       case "^":
       case "¨":
+	  case "΄":
         if(language == "french")
         {
           if(id == "^")
@@ -74,19 +78,32 @@ function createButton(id)
           regenerateKeyboard(language);
           break;
         }
+		if(language == "greek")
+        {
+          if(id == "¨")
+          {
+            umlaut = true;
+            shift = false;
+          }
+          else akcenat = true;
+          regenerateKeyboard(language);
+          break;
+        }
       default:
         // neophodno je da se ne bi ispisivalo &amp; i slicno
         var parser = new DOMParser;
         var dom = parser.parseFromString("<!DOCTYPE html><body>"+this.innerHTML,"text/html");
         var slovo = dom.body.textContent;
-		if(kapica || umlaut)
+		if(kapica || umlaut || akcenat)
         {
-          if("âÂêÊîÎôÔûÛäÄëËïÏöÖüÜ".includes(slovo))
+          if("âÂêÊîÎôÔûÛäÄëËïÏöÖüÜάΆέΈήΉίΊόΌύΎώΏϊΪϋΫ".includes(slovo))
 			text = slovo;
           else if(kapica)
             text = "^"+slovo;
-          else text = "¨"+slovo;
-          kapica = umlaut = false;
+          else if (umlaut)
+            text = "¨"+slovo;
+          else text = "΄"+slovo;
+          kapica = umlaut = akcenat = false;
           regenerateKeyboard(language);
         }
 		else text = slovo;
@@ -120,7 +137,7 @@ function createKeyboard(lang)
               if(shift != caps)
                 slovo = slovo.toUpperCase();
               if(transformisani[slovo]!=undefined)
-                if(kapica)
+                if(kapica || akcenat)
                   slovo = transformisani[slovo][0];
                 else if(umlaut)
                   slovo = transformisani[slovo][1];
@@ -131,7 +148,7 @@ function createKeyboard(lang)
   }
 }
 
-var language = "french";
+var language = "greek";
 var tastatura = document.createElement("div");
 tastatura.id = "keyboard";
 document.body.appendChild(tastatura);
