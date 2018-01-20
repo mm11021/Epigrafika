@@ -18,43 +18,6 @@ else {
 <!-- ucitavanje kontrolera -->
 <script src="static/scripts/unos.js"></script>
 <script src="static/scripts/libs/spin.min.js"></script>
-<script type="text/javascript" src="/test/tastatura/keyboard.js"></script>
-<script type="text/javascript">
-    var language = "english";
-	var napravljena = false;
-	
-	function prikaziTastaturu()
-	{
-		if(!napravljena)
-		{
-			var node = document.getElementById("ABCD");//sByClassName("keyboard")[0].parentNode;
-			var tastatura = document.createElement("div");
-			tastatura.id = "keyboard";
-			tastatura.style.margin = "auto";
-			tastatura.style.backgroundColor = "red";
-			tastatura.style.width = "450px";
-			node.appendChild(tastatura);
-			createKeyboard(language);//,textbox);
-			napravljena = true;
-		}
-		else
-		{
-			var tastatura = document.getElementById("keyboard");
-			var parent = tastatura.parentNode;
-			parent.removeChild(tastatura);
-			/*tastatura = parent;
-			parent = tastatura.parentNode;
-			parent.removeChild(tastatura);*/
-			napravljena = false;
-		}
-	}
-</script>
-<div id="ABCD" style="position:sticky;top:0;z-index:1;background-color:green;width:auto;">
-<div style="width:50px;margin:auto;">
-	<img class="keyboard" style="margin:auto;" src="static/img/keyboard.png" alt="Tastatura" onclick="prikaziTastaturu()"/>
-</div>
-</div>
-<br/>
 <div class="container" ng-controller='unosController' ng-cloak>
 	<form action=""  name='formUnos' method="post" enctype='multipart/form-data' class="form-horizontal">
 	<div class="fieldset_border">
@@ -349,13 +312,5 @@ else {
 		</div>
 	</div>
 </form>
-<script type="text/javascript">
-var x = document.getElementsByTagName("*");
-for(var i=0;i<x.length;i++)
-{
-	if(x[i].tagName!="IMG")
-		x[i].addEventListener("focus",function() { poslednjiFokusiran = document.activeElement; });
-}
-</script>
 </div> <!-- end of container -->
 <?php include 'footer.php'; ?>
