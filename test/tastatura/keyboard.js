@@ -118,7 +118,18 @@ function createButton(id)//,textbox)
         else text = slovo;
         break;
     }
-    this.unos.value += text;
+    // ovo sluzi da se tekst ne unosi uvek na kraj polja, vec na mesto na kome se nalazi kursor
+    var start = this.unos.selectionStart;
+    var end = this.unos.selectionEnd;
+    if(start>=0)
+    {
+      var pocetak = this.unos.value.substr(0,start); // deo reci pre kursora (tj. pre selektovanog dela teksta)
+      var kraj = this.unos.value.substr(end); // deo reci posle kursora (tj. posle selektovanog dela teksta)
+      this.unos.value = pocetak+text+kraj;
+    }
+    if(text != "")
+      start++; // ako je ukucan neki simbol, fokus se treba postaviti posle tog slova
+    this.unos.setSelectionRange(start,start); // vraca se kursor tamo gde je bio
   };
   document.getElementById("keyboard").appendChild(button);
 }
