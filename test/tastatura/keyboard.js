@@ -20,8 +20,9 @@ var caps = false;
 var kapica = false;
 var umlaut = false;
 var akcenat = false;
+var poslednjiFokusiran;
 
-function regenerateKeyboard(lang)//,textbox)
+function regenerateKeyboard(lang)
 {
   var tastatura = document.getElementById("keyboard");
   var parent = tastatura.parentNode;
@@ -30,19 +31,22 @@ function regenerateKeyboard(lang)//,textbox)
   tastatura.id = "keyboard";
   tastatura.style.margin = "auto";
   tastatura.style.backgroundColor = "red";
-  tastatura.style.width = "430px";
+  tastatura.style.width = "450px";
   parent.appendChild(tastatura);
-  createKeyboard(lang);//,textbox);
+  createKeyboard(lang);
 }
 
-function createButton(id)//,textbox)
+function createButton(id)
 {
   var button = document.createElement("button");
   button.id = id;
   button.innerHTML = id;
-  button.unos = document.activeElement;
+  button.unos = poslednjiFokusiran;
   button.onclick = function()
   {
+    this.unos = poslednjiFokusiran;
+    if(this.unos == undefined)
+      return;
     this.unos.focus();
     var text = "";
     switch(id)
@@ -66,11 +70,11 @@ function createButton(id)//,textbox)
       case "LShift":
       case "RShift":
         shift = !shift;
-        regenerateKeyboard(language,textbox);
+        regenerateKeyboard(language);
         break;
       case "Caps":
         caps = !caps;
-        regenerateKeyboard(language,textbox);
+        regenerateKeyboard(language);
         break;
       case "^":
       case "¨":
@@ -84,7 +88,7 @@ function createButton(id)//,textbox)
             umlaut = true;
             shift = false;
           }
-          regenerateKeyboard(language,textbox);
+          regenerateKeyboard(language);
           break;
         }
         if(language == "greek")
@@ -95,7 +99,7 @@ function createButton(id)//,textbox)
             shift = false;
           }
           else akcenat = true;
-          regenerateKeyboard(language,textbox);
+          regenerateKeyboard(language);
           break;
         }
       default:
@@ -113,27 +117,32 @@ function createButton(id)//,textbox)
             text = "¨"+slovo;
           else text = "΄"+slovo;
           kapica = umlaut = akcenat = false;
-          regenerateKeyboard(language,textbox);
+          regenerateKeyboard(language);
         }
         else text = slovo;
         break;
     }
+	// ukoliko element na kome je fokus nije za unos, funckija ne treba da radi nista
+    if(this.unos.tagName != "INPUT" && this.unos.tagName != "TEXTAREA")
+      return;
+    if(this.unos.tagName == "INPUT" && this.unos.type != "text")
+      return;
     // ovo sluzi da se tekst ne unosi uvek na kraj polja, vec na mesto na kome se nalazi kursor
     var start = this.unos.selectionStart;
     var end = this.unos.selectionEnd;
-    if(start>=0)
+    if(text != "" && start>=0)
     {
       var pocetak = this.unos.value.substr(0,start); // deo reci pre kursora (tj. pre selektovanog dela teksta)
       var kraj = this.unos.value.substr(end); // deo reci posle kursora (tj. posle selektovanog dela teksta)
       this.unos.value = pocetak+text+kraj;
-    }
-    if(text != "")
       start++; // ako je ukucan neki simbol, fokus se treba postaviti posle tog slova
-    this.unos.setSelectionRange(start,start); // vraca se kursor tamo gde je bio
+      this.unos.setSelectionRange(start,start); // vraca se kursor tamo gde je bio
+    }
+    else this.unos.setSelectionRange(start,end);
   };
   document.getElementById("keyboard").appendChild(button);
 }
-function createKeyboard(lang)//,textbox)
+function createKeyboard(lang)
 {
   var kb = keyboardJSON[lang];
   for(row in kb)
@@ -143,25 +152,25 @@ function createKeyboard(lang)//,textbox)
     {
       var key = kbrow[keys];
       if(typeof key == "string")
-        createButton(key);//,textbox);
+        createButton(key);
       else
         for(id in key)
           if(id!="letters")
             if(shift)
-              createButton(key[id]);//,textbox);
-            else createButton(id);//,textbox);
+              createButton(key[id]);
+            else createButton(id);
           else
             for(letter in key[id])
             {
               var slovo=key[id][letter];
               if(shift != caps)
                 slovo = slovo.toUpperCase();
-              if(transformisani[slovo]!=undefined)
+              if(transformisani[slovo] != undefined)
                 if(kapica || akcenat)
                   slovo = transformisani[slovo][0];
                 else if(umlaut)
                   slovo = transformisani[slovo][1];
-              createButton(slovo);//,textbox);
+              createButton(slovo);
             }
     }
     document.getElementById("keyboard").appendChild(document.createElement("br"));

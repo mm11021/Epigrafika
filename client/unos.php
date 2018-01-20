@@ -23,7 +23,7 @@ else {
     var language = "english";
 	var napravljena = false;
 	
-	function bla()
+	function prikaziTastaturu()
 	{
 		if(!napravljena)
 		{
@@ -32,7 +32,7 @@ else {
 			tastatura.id = "keyboard";
 			tastatura.style.margin = "auto";
 			tastatura.style.backgroundColor = "red";
-			tastatura.style.width = "430px";
+			tastatura.style.width = "450px";
 			node.appendChild(tastatura);
 			createKeyboard(language);//,textbox);
 			napravljena = true;
@@ -50,6 +50,9 @@ else {
 	}
 </script>
 <div id="ABCD" style="position:sticky;top:0;z-index:1;background-color:green;width:auto;">
+<div style="width:50px;margin:auto;">
+	<img class="keyboard" style="margin:auto;" src="static/img/keyboard.png" alt="Tastatura" onclick="prikaziTastaturu()"/>
+</div>
 </div>
 <br/>
 <div class="container" ng-controller='unosController' ng-cloak>
@@ -61,13 +64,6 @@ else {
 				<label for="oznaka" class="col-sm-2 control-label">{{tr.oznaka}}  <span style="color:red">*</span>:</label>
 				<div class="col-sm-3">
 					<input class="form-control" id="oznaka" type="text" name="oznaka" ng-maxlength="15" ng-model="oznaka" ng-change="proveri_jedinstvenost()" ng-pattern="/^[a-zA-Z0-9\.]+$/" ng-required="true"/>
-					<img class="keyboard" src="static/img/keyboard.png" alt="Tastatura"/>
-					<script type="text/javascript">
-						var textbox = document.getElementById("oznaka");
-						var x=document.getElementsByClassName("keyboard");
-						for(var i=0;i<x.length;i++)
-							x[i].addEventListener("click",function(){ textbox.focus(); bla(); });
-					</script>
 				</div>
 				<div class="col-sm-3">
 					<label class="checkbox-inline">
@@ -354,25 +350,11 @@ else {
 	</div>
 </form>
 <script type="text/javascript">
-var x = document.getElementsByTagName("input");
+var x = document.getElementsByTagName("*");
 for(var i=0;i<x.length;i++)
-	if(x[i].type == "text")
-		x[i].addEventListener("focus",blabla);
-
-x = document.getElementsByTagName("textarea");
-for(var i=0;i<x.length;i++)
-	x[i].addEventListener("focus",blabla);
-
-function blabla()
 {
-	var tastatura = document.getElementById("keyboard");
-	if(tastatura == undefined)
-		return;
-	var dugmici = tastatura.childNodes;
-	for(var i=0;i<dugmici.length;i++)
-	{
-		dugmici[i].unos = document.activeElement;
-	}
+	if(x[i].tagName!="IMG")
+		x[i].addEventListener("focus",function() { poslednjiFokusiran = document.activeElement; });
 }
 </script>
 </div> <!-- end of container -->
