@@ -42,33 +42,9 @@
 			</div>
 		</nav>
 
-		<script type="text/javascript" src="/test/tastatura/keyboard.js"></script>
-		<script type="text/javascript">
-			var language = "english";
-			var napravljena = false;
-			function prikaziTastaturu()
-			{
-				if(!napravljena)
-				{
-					var node = document.getElementById("ABCD");
-					var tastatura = document.createElement("div");
-					tastatura.id = "keyboard";
-					tastatura.style.margin = "auto";
-					tastatura.style.backgroundColor = "red";
-					tastatura.style.width = "450px";
-					node.appendChild(tastatura);
-					createKeyboard(language);
-					napravljena = true;
-				}
-				else
-				{
-					var tastatura = document.getElementById("keyboard");
-					var parent = tastatura.parentNode;
-					parent.removeChild(tastatura);
-					napravljena = false;
-				}
-			}
-		</script>
+		<!-- ucitavanje virtuelne tastature -->
+		<script type="text/javascript" src="static/scripts/keyboard.js"></script>
+		<script type="text/javascript" src="static/scripts/inicijalizacijaTastature.js"></script>
 		<div id="ABCD" style="position:sticky;top:0;z-index:1;background-color:green;width:auto;">
 			<div style="width:50px;margin:auto;">
 				<img class="keyboard" style="margin:auto;" src="static/img/keyboard.png" alt="Tastatura" onclick="prikaziTastaturu()"/>

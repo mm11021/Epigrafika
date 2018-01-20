@@ -5,16 +5,17 @@ xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200)
         keyboardJSON = JSON.parse(this.responseText);
 };
-xmlhttp.open("GET", "/test/tastatura/kb_langs.json", false);
+xmlhttp.open("GET", "/client/static/scripts/kb_langs.json", false);
 xmlhttp.send();
 
 xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200)
         transformisani = JSON.parse(this.responseText);
 };
-xmlhttp.open("GET", "/test/tastatura/kb_special.json", false);
+xmlhttp.open("GET", "/client/static/scripts/kb_special.json", false);
 xmlhttp.send();
 
+var language = "english";
 var shift = false;
 var caps = false;
 var kapica = false;
@@ -22,7 +23,7 @@ var umlaut = false;
 var akcenat = false;
 var poslednjiFokusiran;
 
-function regenerateKeyboard(lang)
+function regenerateKeyboard()
 {
   var tastatura = document.getElementById("keyboard");
   var parent = tastatura.parentNode;
@@ -31,9 +32,9 @@ function regenerateKeyboard(lang)
   tastatura.id = "keyboard";
   tastatura.style.margin = "auto";
   tastatura.style.backgroundColor = "red";
-  tastatura.style.width = "450px";
+  tastatura.style.width = "500px";
   parent.appendChild(tastatura);
-  createKeyboard(lang);
+  createKeyboard();
 }
 
 function createButton(id)
@@ -45,12 +46,20 @@ function createButton(id)
   button.onclick = function()
   {
     this.unos = poslednjiFokusiran;
-    if(this.unos == undefined)
-      return;
-    this.unos.focus();
     var text = "";
     switch(id)
     {
+      case "Backspace":
+        text = "Backspace";
+        break;
+      case "Enter":
+        if(kapica)
+        {
+          text = "^";
+          kapica = false;
+        }
+        else text = "\r\n";
+        break;
       case "Space":
         if(kapica)
         {
@@ -123,6 +132,9 @@ function createButton(id)
         break;
     }
 	// ukoliko element na kome je fokus nije za unos, funckija ne treba da radi nista
+    if(this.unos == undefined)
+      return;
+    this.unos.focus();
     if(this.unos.tagName != "INPUT" && this.unos.tagName != "TEXTAREA")
       return;
     if(this.unos.tagName == "INPUT" && this.unos.type != "text")
@@ -134,17 +146,26 @@ function createButton(id)
     {
       var pocetak = this.unos.value.substr(0,start); // deo reci pre kursora (tj. pre selektovanog dela teksta)
       var kraj = this.unos.value.substr(end); // deo reci posle kursora (tj. posle selektovanog dela teksta)
+      if(text == "Backspace") // ukoliko je pritisnut bekspejs, treba obrisati selektovan tekst ili poslednji karakter
+      {
+        text = "";
+        if(start == end) // brisanje poslednjeg karaktera
+        {
+          pocetak = pocetak.substr(0,start-1);
+		  start--;
+        }
+      }
       this.unos.value = pocetak+text+kraj;
-      start++; // ako je ukucan neki simbol, fokus se treba postaviti posle tog slova
+      start+=text.length; // ako je ukucan neki simbol, fokus se treba postaviti posle tog slova
       this.unos.setSelectionRange(start,start); // vraca se kursor tamo gde je bio
     }
     else this.unos.setSelectionRange(start,end);
   };
   document.getElementById("keyboard").appendChild(button);
 }
-function createKeyboard(lang)
+function createKeyboard()
 {
-  var kb = keyboardJSON[lang];
+  var kb = keyboardJSON[language];
   for(row in kb)
   {
     var kbrow = kb[row];
@@ -174,5 +195,18 @@ function createKeyboard(lang)
             }
     }
     document.getElementById("keyboard").appendChild(document.createElement("br"));
+  }
+  for(jezik in keyboardJSON)
+  {
+    var dugme = document.createElement("button");
+    dugme.id = jezik;
+    dugme.innerHTML = jezik;
+    dugme.onclick = function()
+    {
+      language = this.id;
+      shift = caps = kapica = umlaut = akcenat = false;
+      regenerateKeyboard();
+    }
+    document.getElementById("keyboard").appendChild(dugme);
   }
 }
