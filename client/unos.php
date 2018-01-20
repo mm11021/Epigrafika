@@ -23,15 +23,18 @@ else {
     var language = "english";
 	var napravljena = false;
 	
-	function bla(textbox)
+	function bla()
 	{
 		if(!napravljena)
 		{
-			var node = document.getElementById("tastatura").parentNode;
+			var node = document.getElementById("ABCD");//sByClassName("keyboard")[0].parentNode;
 			var tastatura = document.createElement("div");
 			tastatura.id = "keyboard";
+			tastatura.style.margin = "auto";
+			tastatura.style.backgroundColor = "red";
+			tastatura.style.width = "430px";
 			node.appendChild(tastatura);
-			createKeyboard(language,textbox);
+			createKeyboard(language);//,textbox);
 			napravljena = true;
 		}
 		else
@@ -46,6 +49,9 @@ else {
 		}
 	}
 </script>
+<div id="ABCD" style="position:sticky;top:0;z-index:1;background-color:green;width:auto;">
+</div>
+<br/>
 <div class="container" ng-controller='unosController' ng-cloak>
 	<form action=""  name='formUnos' method="post" enctype='multipart/form-data' class="form-horizontal">
 	<div class="fieldset_border">
@@ -55,6 +61,13 @@ else {
 				<label for="oznaka" class="col-sm-2 control-label">{{tr.oznaka}}  <span style="color:red">*</span>:</label>
 				<div class="col-sm-3">
 					<input class="form-control" id="oznaka" type="text" name="oznaka" ng-maxlength="15" ng-model="oznaka" ng-change="proveri_jedinstvenost()" ng-pattern="/^[a-zA-Z0-9\.]+$/" ng-required="true"/>
+					<img class="keyboard" src="static/img/keyboard.png" alt="Tastatura"/>
+					<script type="text/javascript">
+						var textbox = document.getElementById("oznaka");
+						var x=document.getElementsByClassName("keyboard");
+						for(var i=0;i<x.length;i++)
+							x[i].addEventListener("click",function(){ textbox.focus(); bla(); });
+					</script>
 				</div>
 				<div class="col-sm-3">
 					<label class="checkbox-inline">
@@ -78,11 +91,6 @@ else {
                                         {{tr.greska_jedinstvena_oznaka}}
 					</span>
 				</div>
-			</div>
-			<div class="col-sm3">
-				<button id="tastatura" onclick="bla(oznaka)">
-						Tastatura
-				</button>
 			</div>
 			<div class="row form-group">
 				<label for="natpis" class="col-sm-2 control-label">{{tr.natpis}}  <span style="color:red">*</span>:</label>
@@ -345,5 +353,27 @@ else {
 		</div>
 	</div>
 </form>
+<script type="text/javascript">
+var x = document.getElementsByTagName("input");
+for(var i=0;i<x.length;i++)
+	if(x[i].type == "text")
+		x[i].addEventListener("focus",blabla);
+
+x = document.getElementsByTagName("textarea");
+for(var i=0;i<x.length;i++)
+	x[i].addEventListener("focus",blabla);
+
+function blabla()
+{
+	var tastatura = document.getElementById("keyboard");
+	if(tastatura == undefined)
+		return;
+	var dugmici = tastatura.childNodes;
+	for(var i=0;i<dugmici.length;i++)
+	{
+		dugmici[i].unos = document.activeElement;
+	}
+}
+</script>
 </div> <!-- end of container -->
 <?php include 'footer.php'; ?>

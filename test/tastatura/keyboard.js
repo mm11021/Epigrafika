@@ -21,24 +21,29 @@ var kapica = false;
 var umlaut = false;
 var akcenat = false;
 
-function regenerateKeyboard(lang,textbox)
+function regenerateKeyboard(lang)//,textbox)
 {
   var tastatura = document.getElementById("keyboard");
   var parent = tastatura.parentNode;
   parent.removeChild(tastatura);
   tastatura = document.createElement("div");
   tastatura.id = "keyboard";
+  tastatura.style.margin = "auto";
+  tastatura.style.backgroundColor = "red";
+  tastatura.style.width = "430px";
   parent.appendChild(tastatura);
-  createKeyboard(lang,textbox);
+  createKeyboard(lang);//,textbox);
 }
 
-function createButton(id,textbox)
+function createButton(id)//,textbox)
 {
   var button = document.createElement("button");
   button.id = id;
   button.innerHTML = id;
+  button.unos = document.activeElement;
   button.onclick = function()
   {
+    this.unos.focus();
     var text = "";
     switch(id)
     {
@@ -111,12 +116,13 @@ function createButton(id,textbox)
           regenerateKeyboard(language,textbox);
         }
         else text = slovo;
+        break;
     }
-    textbox.value += text;
-  }
+    this.unos.value += text;
+  };
   document.getElementById("keyboard").appendChild(button);
 }
-function createKeyboard(lang,textbox)
+function createKeyboard(lang)//,textbox)
 {
   var kb = keyboardJSON[lang];
   for(row in kb)
@@ -126,13 +132,13 @@ function createKeyboard(lang,textbox)
     {
       var key = kbrow[keys];
       if(typeof key == "string")
-        createButton(key,textbox);
+        createButton(key);//,textbox);
       else
         for(id in key)
           if(id!="letters")
             if(shift)
-              createButton(key[id],textbox);
-            else createButton(id,textbox);
+              createButton(key[id]);//,textbox);
+            else createButton(id);//,textbox);
           else
             for(letter in key[id])
             {
@@ -144,7 +150,7 @@ function createKeyboard(lang,textbox)
                   slovo = transformisani[slovo][0];
                 else if(umlaut)
                   slovo = transformisani[slovo][1];
-              createButton(slovo,textbox);
+              createButton(slovo);//,textbox);
             }
     }
     document.getElementById("keyboard").appendChild(document.createElement("br"));
