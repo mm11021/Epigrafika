@@ -5,14 +5,14 @@ xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200)
         keyboardJSON = JSON.parse(this.responseText);
 };
-xmlhttp.open("GET", "/client/static/scripts/kb_langs.json", false);
+xmlhttp.open("GET", "static/scripts/kb_langs.json", false);
 xmlhttp.send();
 
 xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200)
         transformisani = JSON.parse(this.responseText);
 };
-xmlhttp.open("GET", "/client/static/scripts/kb_special.json", false);
+xmlhttp.open("GET", "static/scripts/kb_special.json", false);
 xmlhttp.send();
 
 var language = "english";
@@ -22,6 +22,7 @@ var kapica = false;
 var umlaut = false;
 var akcenat = false;
 var poslednjiFokusiran;
+var sirina = "70%";
 
 function regenerateKeyboard()
 {
@@ -31,8 +32,7 @@ function regenerateKeyboard()
   tastatura = document.createElement("div");
   tastatura.id = "keyboard";
   tastatura.style.margin = "auto";
-  tastatura.style.backgroundColor = "red";
-  tastatura.style.width = "500px";
+  tastatura.style.width = sirina;
   parent.appendChild(tastatura);
   createKeyboard();
 }
@@ -41,6 +41,7 @@ function createButton(id)
 {
   var button = document.createElement("button");
   button.id = id;
+  button.style.color = "black";
   button.innerHTML = id;
   button.unos = poslednjiFokusiran;
   button.onclick = function()
@@ -200,6 +201,7 @@ function createKeyboard()
   {
     var dugme = document.createElement("button");
     dugme.id = jezik;
+    dugme.style.color = "black";
     dugme.innerHTML = jezik;
     dugme.onclick = function()
     {
