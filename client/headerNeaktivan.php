@@ -43,12 +43,6 @@
     </div>
 </nav>
 
-<!-- ucitavanje virtuelne tastature -->
-<script type="text/javascript" src="static/scripts/keyboard.js"></script>
-<script type="text/javascript" src="static/scripts/inicijalizacijaTastature.js"></script>
-<div id="ABCD" style="position:sticky;top:0;z-index:1;background-color:inherit;width:auto;">
-	<div style="width:50px;margin:auto;">
-		<img class="keyboard" style="margin:auto;" src="static/img/keyboard.png" alt="Tastatura" onclick="prikaziTastaturu()"/>
-	</div>
-</div>
-<br/>
+<?php
+include 'tastatura.php';
+?>

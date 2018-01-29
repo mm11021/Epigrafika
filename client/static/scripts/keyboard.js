@@ -22,7 +22,6 @@ var kapica = false;
 var umlaut = false;
 var akcenat = false;
 var poslednjiFokusiran;
-var sirina = "70%";
 
 function regenerateKeyboard()
 {
@@ -31,8 +30,6 @@ function regenerateKeyboard()
   parent.removeChild(tastatura);
   tastatura = document.createElement("div");
   tastatura.id = "keyboard";
-  tastatura.style.margin = "auto";
-  tastatura.style.width = sirina;
   parent.appendChild(tastatura);
   createKeyboard();
 }
