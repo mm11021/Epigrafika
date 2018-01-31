@@ -135,7 +135,7 @@ function createButton(id)
     this.unos.focus();
     if(this.unos.tagName != "INPUT" && this.unos.tagName != "TEXTAREA")
       return;
-    if(this.unos.tagName == "INPUT" && this.unos.type != "text")
+    if(this.unos.tagName == "INPUT" && this.unos.type != "text" && this.unos.type != "password")
       return;
     // ovo sluzi da se tekst ne unosi uvek na kraj polja, vec na mesto na kome se nalazi kursor
     var start = this.unos.selectionStart;
@@ -154,6 +154,7 @@ function createButton(id)
         }
       }
       this.unos.value = pocetak+text+kraj;
+      fireEvent(this.unos,'change'); // VAZNO: bez ovoga se ne menjaju vrednosti Angular promenljivih vezanih za polje unos!
       start+=text.length; // ako je ukucan neki simbol, fokus se treba postaviti posle tog slova
       this.unos.setSelectionRange(start,start); // vraca se kursor tamo gde je bio
     }
